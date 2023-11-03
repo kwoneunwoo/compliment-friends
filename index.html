@@ -1,147 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4310/4310185.png" type="image/x-icon">
     <title>배려 모둠 활동</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4310/4310185.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+
+
     <style>
-      @font-face {
-  font-family: 'cafe24';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/Cafe24Supermagic-Bold-v1.0.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-}
+        /* import fonts */
+        @font-face {
+            font-family: 'cafe24';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/Cafe24Supermagic-Bold-v1.0.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'nanum';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-@font-face {
-  font-family: 'nanum';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-* {
-  text-align: center;
-}
-
-p {
-  font-family: nanum;
-  font-size: small;
-}
-
-#header {
-  font-family: cafe24;
-}
-
-#inputForm {
-  font-family: nanum;
-}
-
-input {
-  padding-left: 1%;
-  
-}
-
-input::placeholder {
-  width: 100%;
-  text-align: left;
-  vertical-align: top;
-  padding-bottom: 90px;
-}
-
-#identifier {
-  background-color: rgb(239, 239, 239);
-  width: 70%;
-  height: 50px;
-  text-align: left;
-  border: none;
-  border-radius: 20px;
-  outline: none;
-  padding-left: 10px;
-}
-
-#CommentContainer {
-  background-color: rgb(239, 239, 239);
-  width: 70%;
-  padding-top: 15px;
-  padding-bottom: 100px;
-  padding-left: 10px;
-  text-align: left;
-  border: none;
-  border-radius: 20px;
-  outline: none;
-}
-
-#submitButton {
-  width: 20%;
-  height: 50px;
-  border: none;
-  outline: none;
-  border-radius: 20px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-input[type="submit"]:hover {
-  background-color: #6900E0;
-  color: white;
-  transition: 0.3s;
-}
+        /* input design */
+        input, textarea {
+            width: 90%;
+            min-height: 48px;
+            /* box-sizing: border-box; */
+            margin-bottom: 16px;
+            padding: 0 10px;
+            background-color: #efefef;
+            border: 0;
+            border-radius: 6px;
+            font-family: nanum;
+        }
+        textarea {
+            height: 50vh;
+            padding-top: 10px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #b0b0b0;
+        }
+        input[type="submit"] {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #fff;
+            background-color: #6A24FE;
+        }
     </style>
+    <script>
+        function sendCompliment() {
+            const message = document.getElementById('comment').value;
+            const number = document.getElementById('identifier').value;
+            
+            // webhook send message
+            const request = new XMLHttpRequest();
+            request.open("POST", "https://discord.com/api/webhooks/1169123354880507924/Huxg4T69-BtNw-QiqJdzamZ2BxZW7OSBFc-2kuSq_zKLvQUVO0QDqVDLqbcqcTcB-Ceu");
+            request.setRequestHeader('Content-type', 'application/json');
+            
+            // check status code
+            request.onload = function() {
+                if (request.status == 204) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "성공적으로 전송되었습니다!",
+                        text: "'우리반에게 한마디' 활동에 참여해주셔서 감사합니다",
+                    });
+                    // document.getElementById('comment').value = '';
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "오류 발생",
+                        text: `Http 요청 상태코드: ${request.status}`,
+                    });
+                }
+            };
+
+            // send embed
+            const params = {
+                "embeds": [{
+                    "title": number,
+                    "description": message,
+                    "color": 1127128
+                }]
+            };
+            request.send(JSON.stringify(params));
+            
+        }
+    </script>
 </head>
-<body>
-  <div id="header">
-    <h4 style="margin-bottom: 0;">배려 모둠 활동</h4>
-    <h1 style="margin-top: 0; margin-bottom: 0; font-size: 300%;">우리반에게 한 마디</h1>
-    <h5 style="margin-top: 0;">배려 모둠원에게 활동 인증을 요청하시면, 확인 후 간식을 드립니다!</h5>
-  </div>
-  <form id="inputForm" onsubmit="event.preventDefault(); AddCompliment();">
-    <input id="identifier" type="text" placeholder="학번과 이름을 입력해주세요" autocomplete="off">
-    <br>
-    <br>
-    <input id="CommentContainer" type="text" placeholder="배려 가득한 한마디를 입력해주세요" autocomplete="off">
-    <br>
-    <br>
-    <input id="submitButton" type="submit" value="보내기"">
-  </form>
-  <br>
-  <p>제작 - 1016송현</p>
-  <p>도움 - 10901권은우</p>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-  <script>
-    function AddCompliment() {
-  const message = document.getElementById('CommentContainer').value;
-  const number = document.getElementById('identifier').value;
-
-  const http = new XMLHttpRequest();
-  const url = 'https://discord.com/api/webhooks/1169484351650680943/m13a6wTgW4VK4PM1oEXxQqK33YOqwrZMdG1jEzKBD_6rHUmbLsW5lYSTfnloQQHmRMfG';
-
-  if(message&&number){
-    http.open("POST", url);
-    http.setRequestHeader('Content-type', 'application/json');
-    const param = {
-      "embeds": [{
-        "title": number,
-        "description": message,
-      }]
-    }
-  http.send(JSON.stringify(param));
-
-  Swal.fire({
-      icon: 'success',
-      title: '성공적으로 전송되었습니다!',
-      text: '배려 모둠원에게 인증을 부탁해보세요!',
-    });
-
-  document.getElementById('CommentContainer').value = '';
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: '학번과 메시지를 모두 입력해주세요!',
-      text: '간식을 기대했나요?',
-    });
-  }
-}
-  </script>
+<body style="text-align: center;">
+    <div style="font-family: cafe24;">
+        <h4 style="margin-bottom: 0;">배려 모둠 활동</h4>
+        <h1 style="margin-top: 0; margin-bottom: 0; font-size: 300%;">우리반에게 한 마디</h1>
+        <h5 style="margin-top: 0;">배려 모둠원에게 활동 인증을 요청하시면, 확인 후 간식을 드립니다!</h5>
+    </div>
+    <div class="comment">
+      <form onsubmit="event.preventDefault(); sendCompliment();">
+        <input id="identifier" type="text" placeholder="학번과 이름을 입력해주세요" autocomplete="off" maxlength="256" required>
+        <textarea id="comment" type="text" placeholder="배려 가득한 한마디를 입력해주세요" autocomplete="off" maxlength="4096" required></textarea>
+        <input type="submit" value="보내기">
+      </form>
+    </div>
 </body>
 </html>
