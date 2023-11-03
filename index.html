@@ -3,19 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4310/4310185.png" type="image/x-icon">
     <title>배려 모둠 활동</title>
+    <style>
+      @font-face {
+  font-family: 'cafe24';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/Cafe24Supermagic-Bold-v1.0.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nanum';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  text-align: center;
+}
+
+p {
+  font-family: nanum;
+  font-size: small;
+}
+
+#header {
+  font-family: cafe24;
+}
+
+#inputForm {
+  font-family: nanum;
+}
+
+input {
+  padding-left: 1%;
+  
+}
+
+input::placeholder {
+  width: 100%;
+  text-align: left;
+  vertical-align: top;
+  padding-bottom: 90px;
+}
+
+#identifier {
+  background-color: rgb(239, 239, 239);
+  width: 70%;
+  height: 50px;
+  text-align: left;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  padding-left: 10px;
+}
+
+#CommentContainer {
+  background-color: rgb(239, 239, 239);
+  width: 70%;
+  padding-top: 15px;
+  padding-bottom: 100px;
+  padding-left: 10px;
+  text-align: left;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+}
+
+#submitButton {
+  width: 20%;
+  height: 50px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+  background-color: #6900E0;
+  color: white;
+  transition: 0.3s;
+}
+    </style>
 </head>
 <body>
-  <h1>배려 모둠 활동 - 우리반에게 한마디</h>
-  <h5>문구를 남긴 후 배려 모둠 인원에게 인증을 받으시면 간식을 드립니다!!</h5>
-    <div class="comment">
-      <form onsubmit="event.preventDefault(); AddCompliment();">
-        <input id="identifier" type="text" placeholder="학번과 이름을 입력하세요" style="width: 13%;" autocomplete="off">
-        <input id="CommentContainer" type="text" placeholder="문구을 입력해주세요" style="width: 20%;" autocomplete="off">
-        <input type="submit" value="보내기">
-      </form>
-    </div>
+  <div id="header">
+    <h4 style="margin-bottom: 0;">배려 모둠 활동</h4>
+    <h1 style="margin-top: 0; margin-bottom: 0; font-size: 300%;">우리반에게 한 마디</h1>
+    <h5 style="margin-top: 0;">배려 모둠원에게 활동 인증을 요청하시면, 확인 후 간식을 드립니다!</h5>
+  </div>
+  <form id="inputForm" onsubmit="event.preventDefault(); AddCompliment();">
+    <input id="identifier" type="text" placeholder="학번과 이름을 입력해주세요" autocomplete="off">
+    <br>
+    <br>
+    <input id="CommentContainer" type="text" placeholder="배려 가득한 한마디를 입력해주세요" autocomplete="off">
+    <br>
+    <br>
+    <input id="submitButton" type="submit" value="보내기"">
+  </form>
+  <br>
+  <p>제작 - 1016송현</p>
+  <p>도움 - 10901권은우</p>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script>
+    function AddCompliment() {
+  const message = document.getElementById('CommentContainer').value;
+  const number = document.getElementById('identifier').value;
 
-    <script src="/compliment.js"></script>
+  const http = new XMLHttpRequest();
+  const url = 'https://discord.com/api/webhooks/1169484351650680943/m13a6wTgW4VK4PM1oEXxQqK33YOqwrZMdG1jEzKBD_6rHUmbLsW5lYSTfnloQQHmRMfG';
+
+  if(message&&number){
+    http.open("POST", url);
+    http.setRequestHeader('Content-type', 'application/json');
+    const param = {
+      "embeds": [{
+        "title": number,
+        "description": message,
+      }]
+    }
+  http.send(JSON.stringify(param));
+
+  Swal.fire({
+      icon: 'success',
+      title: '성공적으로 전송되었습니다!',
+      text: '배려 모둠원에게 인증을 부탁해보세요!',
+    });
+
+  document.getElementById('CommentContainer').value = '';
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: '학번과 메시지를 모두 입력해주세요!',
+      text: '간식을 기대했나요?',
+    });
+  }
+}
+  </script>
 </body>
 </html>
