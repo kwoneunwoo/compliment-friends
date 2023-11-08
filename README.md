@@ -1,7 +1,7 @@
 # compliment-friends
 High school project for 'Activities of 6 good'
 
-You can view this project in https://kwoneunwoo.github.io/compliment-friends/
+You can view this project in [Here!](https://kwoneunwoo.github.io/compliment-friends/)
 
 # Preview
 <h1 align="center">
